@@ -17,15 +17,21 @@ export async function searchAuthorsByName(searchTerm) {
 export async function getAuthorById(id) {
   // Query the database and return the book with a matching id
   try {
-    const authorById = await pool.query(`SELECT * FROM authors WHERE id = ${id}`);
+    const authorById = await pool.query(`SELECT * FROM authors WHERE id = $1`, [id]);
     return authorById.rows;
   } catch (error) { console.log("error")  };
 }
 
 export async function createAuthor(author) {
-  // Query the database to create an author and return the newly created author
-  return {};
+  try {
+    const createAuthorName = await pool.query(`INSERT INTO authors(first_name, last_name) VALUES ($1, $2) RETURNING *`, [author.first_name, author.last_name]);
+    return createAuthorName.rows;
+  } catch (error) {
+    console.log(error);
+  }
 }
+  
+
 
 export async function updateAuthorById(id, updates) {
   // Query the database to update an author and return the newly updated author
