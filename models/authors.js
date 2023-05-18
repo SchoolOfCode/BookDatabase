@@ -2,7 +2,8 @@ import { pool } from "../db/index.js";
 
 export async function getAuthors() {
   // Query the database and return all authors
-  return [];
+  const allAuthors = await pool.query("SELECT * FROM authors"); //use http://localhost:3000/api/authors to see the result in Thunder Client
+  return allAuthors.rows;
 }
 
 export async function searchAuthorsByName(searchTerm) {
