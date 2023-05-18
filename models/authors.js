@@ -9,9 +9,19 @@ export async function getAuthors() {
 export async function searchAuthorsByName(searchTerm) {
   try {
     const searchByName = await pool.query(`SELECT * FROM authors WHERE first_name LIKE '${searchTerm}'`);
+    // Should it be like this instead? `SELECT * FROM authors WHERE first_name LIKE $1`, [searchTerm]);
     return searchByName.rows;
   } catch (error) { console.log("error") }; 
   // Query the database and return all authors that have a name matching the searchTerm
+}
+
+export async function searchAuthorsByName(searchTerm) {
+  // Query the database and return all authors that have a name matching the searchTerm
+  let authors = await pool.query(`Select first_name, last_name FROM authors WHERE last_name LIKE $1`, [searchTerm]);
+  return {
+    success: true,
+    payload: authors.rows
+  };
 }
 
 export async function getAuthorById(id) {
@@ -42,7 +52,13 @@ export async function updateAuthorById(id, updates) {
     // Query the database to update an author and return the newly updated author
   }
 }
+
 export async function deleteAuthorById(id) {
   // Query the database to delete an author and return the deleted author
-  return {};
+  try {
+    const deleteAuthor = await pool.query(`DELETE FROM authors WHERE id = $1 RETURNING *`, [id]);
+    return deleteAuthor.rows;
+  } catch (error) {
+    console.log(error);
+  } 
 }
