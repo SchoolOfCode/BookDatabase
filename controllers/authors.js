@@ -1,12 +1,17 @@
 import * as authorModel from "../models/authors.js";
 
 export async function searchAuthorsByName(req, res, next) {
-  if (req.query.search !== undefined) {
-    const authors = await authorModel.searchAuthorsByName(req.query.search);
-    return res.json({ success: true, payload: authors });
-  }
+  try {
+    if (req.query.search !== undefined) {
+      const authors = await authorModel.searchAuthorsByName(req.query.search);
+    
+      return res.json({ success: true, payload: authors });
+    }
+  } catch (error) { res.json({ success: false, message: error.message }) };
   next();
-}
+  }
+  
+
 
 export async function getAuthors(req, res) {
   const authors = await authorModel.getAuthors();
