@@ -8,7 +8,7 @@ export async function getAuthors() {
 
 export async function searchAuthorsByName(searchTerm) {
   try {
-    const searchByName = await pool.query(`SELECT * FROM authors WHERE first_name LIKE '%${searchTerm}%'`);
+    const searchByName = await pool.query(`SELECT * FROM authors WHERE first_name LIKE '${searchTerm}'`);
     return searchByName.rows;
   } catch (error) { console.log("error") }; 
   // Query the database and return all authors that have a name matching the searchTerm
@@ -16,7 +16,10 @@ export async function searchAuthorsByName(searchTerm) {
 
 export async function getAuthorById(id) {
   // Query the database and return the book with a matching id
-  return {};
+  try {
+    const authorById = await pool.query(`SELECT * FROM authors WHERE id = ${id}`);
+    return authorById.rows;
+  } catch (error) { console.log("error")  };
 }
 
 export async function createAuthor(author) {
