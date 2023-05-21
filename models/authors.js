@@ -34,7 +34,12 @@ export async function createAuthor(author) {
 
 
 export async function updateAuthorById(id, updates) {
-  // Query the database to update an author and return the newly updated author
+  try {
+    const updateAuthorId = await pool.query(`UPDATE authors SET first_name = $1, last_name = $2 WHERE id = $3 RETURNING *`, [updates.first_name, updates.last_name, id]);
+    return updateAuthorId.rows;
+  } catch (error) {
+    console.log(error);
+  }
   return {};
 }
 
